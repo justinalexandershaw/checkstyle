@@ -1,4 +1,4 @@
-package edu.uw.cs.checks.structural;
+package edu.uw.cs.checks.readability;
 
 import com.puppycrawl.tools.checkstyle.api.*;
 
@@ -25,18 +25,21 @@ import com.puppycrawl.tools.checkstyle.api.*;
  *    public static void main(String[] args) {
  *       System.out.println("Hello, World!"); // violation
  *       System.out.println(); // OK
+ *       String helloWorld = "Hello, World!";
+ *       System.out.print(helloWorld); // violation
  *    }
  * }
  * </pre>
  */
-public class NonBlankPrintlnInMainCheck extends AbstractCheck {
+public class NonBlankPrintInMainCheck extends AbstractCheck {
 
-    private String[] invalidPrints = new String[] {"print", "println", "printf"};
+    private static final String[] INVALID_PRINTS = new String[] {"print", "println", "printf"};
 
     /**
-     * A key is pointing to the warning message text in "messages.properties" file.
+     * A key is pointing to the non-blank print in main
+     * text in "messages.properties" file.
      */
-    public static final String MSG_KEY = "nonblank.println.in.main";
+    public static final String MSG_KEY = "nonblank.print.in.main";
 
     @Override
     public int[] getRequiredTokens() {
@@ -149,29 +152,32 @@ public class NonBlankPrintlnInMainCheck extends AbstractCheck {
         if (methodCall != null
                 && hasNonBlankParameters(methodCall)
                 && hasSystemDotOutIdentifier(methodCall)
-                && hasIdentifier(methodCall, invalidPrints)) {
-            log(methodCall, MSG_KEY);
+                && !getIdentifier(methodCall).equals("")) {
+            final String identifier = getIdentifier(methodCall);
+            log(methodCall, MSG_KEY, identifier);
         }
     }
 
     /**
-     * Returns true if the given node has a child identifier with any of the given text.
-     * @param method - the method call node in the AST
-     * @param identifiers - the identifiers to match against
-     * @return whether or not a match is found
+     * Returns a string representation of the identifier of System.out.(identifier) if the
+     * identifier matches one of the INVALID_PRINTS identifiers. Otherwise, this method returns
+     * an empty string representing no matches were found.
+     * @param method the AST node which represents a method call in the main method.
+     * @return a string representation of the System.out.<identifier> or an empty String if no
+     * matches were found.
      */
-    private static boolean hasIdentifier(DetailAST method, String[] identifiers) {
+    private static String getIdentifier(DetailAST method) {
         try {
             final DetailAST lastDot = method.findFirstToken(TokenTypes.DOT);
             final String identifier = lastDot.findFirstToken(TokenTypes.IDENT).getText();
-            for (String id : identifiers) {
+            for (String id : INVALID_PRINTS) {
                 if (identifier.equals(id)) {
-                    return true;
+                    return id;
                 }
             }
-            return false;
+            return ""; // return a string that will never be in the INVALID_PRINTS array
         } catch (Exception e) {
-            return false;
+            return "";
         }
     }
 
