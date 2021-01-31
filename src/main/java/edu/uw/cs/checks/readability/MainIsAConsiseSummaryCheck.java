@@ -31,7 +31,7 @@ import com.puppycrawl.tools.checkstyle.api.*;
  * }
  * </pre>
  */
-public class NonBlankPrintInMainCheck extends AbstractCheck {
+public class MainIsAConsiseSummaryCheck extends AbstractCheck {
 
     private static final String[] INVALID_PRINTS = new String[] {"print", "println", "printf"};
 
@@ -39,7 +39,7 @@ public class NonBlankPrintInMainCheck extends AbstractCheck {
      * A key is pointing to the non-blank print in main
      * text in "messages.properties" file.
      */
-    public static final String MSG_KEY = "nonblank.print.in.main";
+    public static final String MSG_KEY = "main.is.a.concise.summary";
 
     @Override
     public int[] getRequiredTokens() {

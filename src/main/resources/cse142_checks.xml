@@ -5,6 +5,6 @@
 
 <module name="Checker">
   <module name="TreeWalker">
-    <module name="edu.uw.cs.checks.readability.NonBlankPrintInMainCheck" />
+    <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
   </module>
 </module>
