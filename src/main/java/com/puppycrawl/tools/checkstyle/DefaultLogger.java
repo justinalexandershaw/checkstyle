@@ -187,12 +187,6 @@ public class DefaultLogger extends AutomaticBean implements AuditListener {
             Definitions.CHECKSTYLE_BUNDLE, AUDIT_FINISHED_MESSAGE, null, null,
             LocalizedMessage.class, null);
         infoWriter.println(auditFinishMessage.getMessage());
-        infoWriter.println();
-        infoWriter.println("NOTE: Use this tool at your own risk. We do not guarantee that using");
-        infoWriter.println("this tool will prevent you from losing style points on an assignment.");
-        infoWriter.println("Getting \"no errors found\" does not guarantee that you will earn any");
-        infoWriter.println("particular grade on an assignment.");
-        infoWriter.println();
         closeStreams();
     }
 

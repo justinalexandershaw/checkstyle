@@ -68,11 +68,19 @@ public final class Main {
      * message in the "messages.properties" file.
      */
     public static final String ERROR_COUNTER = "Main.errorCounter";
+
+    /**
+     * A key pointing to the no errors found
+     * message in the "messages.properties" file.
+     */
+    public static final String NO_ERRORS_FOUND = "Main.noErrorsFound";
+
     /**
      * A key pointing to the load properties exception
      * message in the "messages.properties" file.
      */
     public static final String LOAD_PROPERTIES_EXCEPTION = "Main.loadProperties";
+
     /**
      * A key pointing to the create listener exception
      * message in the "messages.properties" file.
@@ -146,11 +154,30 @@ public final class Main {
                 // print error count statistic to error output stream,
                 // output stream might be used by validation report content
                 System.err.println(errorCounterMessage.getMessage());
+            } else if (errorCounter == 0) {
+                final LocalizedMessage noErrorsFoundMessage = new LocalizedMessage(1,
+                        Definitions.CHECKSTYLE_BUNDLE, NO_ERRORS_FOUND,
+                        null, null, Main.class, null);
+                // print error count statistic to error output stream,
+                // output stream might be used by validation report content
+                System.err.println(noErrorsFoundMessage.getMessage());
             }
+            printDisclaimer();
             if (exitStatus != 0) {
                 System.exit(exitStatus);
             }
         }
+    }
+
+    /**
+     * Prints the "don't trust this tool for a certain grade" disclaimer to the console.
+     */
+    private static void printDisclaimer() {
+        System.err.println();
+        System.err.println("NOTE: Use this tool at your own risk. We do not guarantee that using");
+        System.err.println("this tool will prevent you from losing style points on an assignment.");
+        System.err.println("Getting \"no errors found\" does not guarantee that you will earn any");
+        System.err.println("particular grade on an assignment.");
     }
 
     /**

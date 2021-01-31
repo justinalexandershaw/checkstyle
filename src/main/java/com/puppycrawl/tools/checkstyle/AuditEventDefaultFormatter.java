@@ -41,7 +41,7 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
 
     @Override
     public String format(AuditEvent event) {
-        final String fileName = event.getFileName();
+        final String fileName = getShortFileName(event.getFileName());
         final String message = event.getMessage();
         final SeverityLevel severityLevel = event.getSeverityLevel();
         final String severityLevelName;
@@ -76,7 +76,7 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
      * @return the length of the buffer for StringBuilder.
      */
     private static int calculateBufferLength(AuditEvent event, int severityLevelNameLength) {
-        return LENGTH_OF_ALL_SEPARATORS + event.getFileName().length()
+        return LENGTH_OF_ALL_SEPARATORS + getShortFileName(event.getFileName()).length()
             + event.getMessage().length() + severityLevelNameLength
             + getCheckShortName(event).length();
     }
@@ -109,6 +109,19 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
             }
         }
         return checkShortName;
+    }
+
+    /**
+     * Returns the shortened version of the filename (without the folders).
+     */
+    private static String getShortFileName(String fileName) {
+        final int lastSlashIndex = fileName.lastIndexOf('/');
+        final int indexOfLastChar = fileName.length() - 1;
+        if (lastSlashIndex == -1 && lastSlashIndex < indexOfLastChar) {
+            return fileName;
+        } else {
+            return fileName.substring(lastSlashIndex + 1);
+        }
     }
 
 }
