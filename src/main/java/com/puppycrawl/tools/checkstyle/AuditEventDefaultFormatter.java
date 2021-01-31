@@ -27,14 +27,14 @@ import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 /**
  * Represents the default formatter for log message.
  * Default log message format is:
- * [SEVERITY LEVEL] filePath:lineNo:columnNo: message. [CheckName]
+ * [SEVERITY LEVEL] CheckName: message. [filePath, line #]
  * When the module id of the message has been set, the format is:
- * [SEVERITY LEVEL] filePath:lineNo:columnNo: message. [ModuleId]
+ * [SEVERITY LEVEL] ModuleId: message. [filePath, line #]
  */
 public class AuditEventDefaultFormatter implements AuditEventFormatter {
 
     /** Length of all separators. */
-    private static final int LENGTH_OF_ALL_SEPARATORS = 10;
+    private static final int LENGTH_OF_ALL_SEPARATORS = 15;
 
     /** Suffix of module names like XXXXCheck. */
     private static final String SUFFIX = "Check";
@@ -43,7 +43,6 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
     public String format(AuditEvent event) {
         final String fileName = event.getFileName();
         final String message = event.getMessage();
-
         final SeverityLevel severityLevel = event.getSeverityLevel();
         final String severityLevelName;
         if (severityLevel == SeverityLevel.WARNING) {
@@ -59,21 +58,11 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
         final int bufLen = calculateBufferLength(event, severityLevelName.length());
         final StringBuilder sb = new StringBuilder(bufLen);
 
-        sb.append('[').append(severityLevelName).append("] ")
-            .append(fileName).append(':').append(event.getLine());
-        if (event.getColumn() > 0) {
-            sb.append(':').append(event.getColumn());
-        }
-        sb.append(": ").append(message).append(" [");
-        if (event.getModuleId() == null) {
-            final String checkShortName = getCheckShortName(event);
-            sb.append(checkShortName);
-        }
-        else {
-            sb.append(event.getModuleId());
-        }
-        sb.append(']');
-
+        // [ERROR] NameOfTheCheck: This is the message to fix it. (FileName.java, line 1)
+        sb.append('[').append(severityLevelName).append("] ");
+        sb.append(event.getModuleId() == null ? getCheckShortName(event) : event.getModuleId());
+        sb.append(": ").append(message);
+        sb.append(" (").append(fileName).append(", line ").append(event.getLine()).append(')');
         return sb.toString();
     }
 

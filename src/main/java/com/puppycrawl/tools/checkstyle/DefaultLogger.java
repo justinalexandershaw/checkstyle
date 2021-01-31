@@ -47,24 +47,16 @@ public class DefaultLogger extends AutomaticBean implements AuditListener {
      * message in the "messages.properties" file.
      */
     public static final String ADD_EXCEPTION_MESSAGE = "DefaultLogger.addException";
-    /**
-     * A key pointing to the started audit
-     * message in the "messages.properties" file.
-     */
-    public static final String AUDIT_STARTED_MESSAGE = "DefaultLogger.auditStarted";
-    /**
-     * A key pointing to the finished audit
-     * message in the "messages.properties" file.
-     */
-    public static final String AUDIT_FINISHED_MESSAGE = "DefaultLogger.auditFinished";
 
     /** Where to write info messages. **/
     private final PrintWriter infoWriter;
+
     /** Close info stream after use. */
     private final boolean closeInfo;
 
     /** Where to write error messages. **/
     private final PrintWriter errorWriter;
+
     /** Close error stream after use. */
     private final boolean closeError;
 
@@ -170,19 +162,11 @@ public class DefaultLogger extends AutomaticBean implements AuditListener {
 
     @Override
     public void auditStarted(AuditEvent event) {
-        final LocalizedMessage auditStartMessage = new LocalizedMessage(1,
-            Definitions.CHECKSTYLE_BUNDLE, AUDIT_STARTED_MESSAGE, null, null,
-            LocalizedMessage.class, null);
-        infoWriter.println(auditStartMessage.getMessage());
         infoWriter.flush();
     }
 
     @Override
     public void auditFinished(AuditEvent event) {
-        final LocalizedMessage auditFinishMessage = new LocalizedMessage(1,
-            Definitions.CHECKSTYLE_BUNDLE, AUDIT_FINISHED_MESSAGE, null, null,
-            LocalizedMessage.class, null);
-        infoWriter.println(auditFinishMessage.getMessage());
         closeStreams();
     }
 
