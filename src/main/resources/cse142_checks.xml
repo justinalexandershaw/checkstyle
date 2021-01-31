@@ -4,7 +4,7 @@
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
-  <module name="edu.uw.cs.listeners.VerboseListener" />
+  <!-- <module name="edu.uw.cs.listeners.VerboseListener" /> -->
   <module name="TreeWalker">
     <module name="edu.uw.cs.checks.structural.NonBlankPrintlnInMainCheck" />
   </module>
