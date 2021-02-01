@@ -4,8 +4,6 @@ public class InputMainIsAConciseSummary {
     public static void main(String[] args) {
         // Compliant Code
         System.out.println();   // OK
-        System.out.printf();    // OK
-        System.out.print();     // OK
         
         // Uncompliant Code
         System.out.println("Hello, World!");    // Violation

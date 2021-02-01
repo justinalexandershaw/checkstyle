@@ -1,25 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+    "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
   <module name="TreeWalker">
-    <!-- 
-      READABILITY
-    -->
+    <!-- STRUCTURE -->
+
+    <!-- Enforces the no package statement rule. -->
+    <module name="edu.uw.cs.checks.structure.NoPackageStatementsCheck" />
+    <!-- Enforces the wildcard-only import rule. -->
+    <module name="edu.uw.cs.checks.structure.OnlyWildcardImportsCheck" />
+
+    <!-- READABILITY -->
 
     <!-- Checks there are no non-blank prints in main. -->
     <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
     
-    <!-- 
-      ADVANCED MATERIAL
-    -->
+    <!-- ADVANCED MATERIAL -->
     
-    <!-- No Ternary Operators (inline conditionals) -->
+    <!-- Enforces the no ternary operators (inline conditionals) rule. -->
     <module name="AvoidInlineConditionals">
       <property name="id" value="NoTernaryOperators"/>
-      <message key="inline.conditional.avoid" value="Advanced material is not allowed. Try removing this ternary operator."/>
+      <message key="inline.conditional.avoid" 
+       value="Advanced material is not allowed. Try removing this ternary operator."
+       />
     </module>
   </module>
 </module>
