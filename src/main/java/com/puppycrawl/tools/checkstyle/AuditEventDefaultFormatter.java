@@ -27,7 +27,7 @@ import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 /**
  * Represents the default formatter for log message.
  * Default log message format is:
- * [SEVERITY LEVEL] CheckName: message. (filePath, line #)
+ * [SEVERITY LEVEL] CheckName: message. filePath:lineNo:columnNo:
  * When the module id of the message has been set, the format is:
  * [SEVERITY LEVEL] ModuleId: message. (filePath, line #)
  */
@@ -58,11 +58,12 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
         final int bufLen = calculateBufferLength(event, severityLevelName.length());
         final StringBuilder sb = new StringBuilder(bufLen);
 
-        // [ERROR] NameOfTheCheck: This is the message to fix it. (FileName.java, line 1)
+        // [ERROR] NameOfTheCheck: This is the message to fix it. (FileName.java:1:2)
         sb.append('[').append(severityLevelName).append("] ");
         sb.append(event.getModuleId() == null ? getCheckShortName(event) : event.getModuleId());
-        sb.append(": ").append(message);
-        sb.append(" (").append(fileName).append(", line ").append(event.getLine()).append(')');
+        sb.append(": ").append(message).append(' ');
+        sb.append('(').append(fileName);
+        sb.append(':').append(event.getLine()).append(':').append(event.getColumn()).append(')');
         return sb.toString();
     }
 
