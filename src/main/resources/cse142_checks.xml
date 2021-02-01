@@ -5,19 +5,7 @@
 
 <module name="Checker">
   <module name="TreeWalker">
-    <!-- STRUCTURE -->
-
-    <!-- Enforces the no package statement rule. -->
-    <module name="edu.uw.cs.checks.structure.NoPackageStatementsCheck" />
-    <!-- Enforces the wildcard-only import rule. -->
-    <module name="edu.uw.cs.checks.structure.OnlyWildcardImportsCheck" />
-
-    <!-- READABILITY -->
-
-    <!-- Checks there are no non-blank prints in main. -->
-    <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
-    
-    <!-- ADVANCED MATERIAL -->
+    <!-- ADVANCED -->
     
     <!-- Enforces the no ternary operators (inline conditionals) rule. -->
     <module name="AvoidInlineConditionals">
@@ -26,5 +14,34 @@
        value="Advanced material is not allowed. Try removing this ternary operator."
        />
     </module>
+
+    <!-- COMMENTS -->
+
+    <module name="RegexpHeader">
+      <property
+        name="header"
+        value="^//(\s)?([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?\s?([a-zA-Z]{1,})?)$
+          \n^//(\s)?(\d){1,2}/(\d){1,2}/(\d){1,2}$
+          \n^// All rights reserved$"
+        />
+    </module>
+
+    <!-- CONTROL STRUCTURE -->
+
+    <!-- METHODS -->
+
+    <!-- READABILITY -->
+
+    <!-- Checks there are no non-blank prints in main. -->
+    <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
+
+    <!-- REDUNDANCY -->
+
+    <!-- STRUCTURE -->
+
+    <!-- Enforces the no package statement rule. -->
+    <module name="edu.uw.cs.checks.structure.NoPackageStatementsCheck" />
+    <!-- Enforces the wildcard-only import rule. -->
+    <module name="edu.uw.cs.checks.structure.OnlyWildcardImportsCheck" />
   </module>
 </module>
