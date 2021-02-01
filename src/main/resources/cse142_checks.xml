@@ -5,6 +5,21 @@
 
 <module name="Checker">
   <module name="TreeWalker">
+    <!-- 
+      READABILITY
+    -->
+
+    <!-- Checks there are no non-blank prints in main. -->
     <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
+    
+    <!-- 
+      ADVANCED MATERIAL
+    -->
+    
+    <!-- No Ternary Operators (inline conditionals) -->
+    <module name="AvoidInlineConditionals">
+      <property name="id" value="NoTernaryOperators"/>
+      <message key="inline.conditional.avoid" value="Advanced material is not allowed. Try removing this ternary operator."/>
+    </module>
   </module>
 </module>
