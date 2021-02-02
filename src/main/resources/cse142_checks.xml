@@ -18,12 +18,14 @@
     <!-- COMMENTS -->
 
     <module name="RegexpHeader">
-      <property
-        name="header"
-        value="^//(\s)?([a-zA-Z]{2,}\s[a-zA-Z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?\s?([a-zA-Z]{1,})?)$
-          \n^//(\s)?(\d){1,2}/(\d){1,2}/(\d){1,2}$
-          \n^// All rights reserved$"
-        />
+      <!-- Matches either a comment (// or /*) or nothing followed by a legal name. Our legal name
+      matcher is quite generous and can include up to four name tokens each of which can incude
+      one or more case-insensitive alphebetic characters followed optionall by a modifying token
+      (modifying tokens are either a ' - or . character) followed by any number of alphebetical
+      characters (possibly zero). I ran this test code against all the student names in my section
+      from Wi21 and also some hand-selected "harder" names and they all passed. -->
+      <property name="header" value="^(\/\/|\/\*)?\s*([a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*[a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*[a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*[a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*)$" />
+      <property name="message" value="Your file must include a comment header that includes your name."/>
     </module>
 
     <!-- CONTROL STRUCTURE -->

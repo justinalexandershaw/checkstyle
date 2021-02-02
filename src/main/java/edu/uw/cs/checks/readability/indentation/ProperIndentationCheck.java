@@ -1,30 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-// checkstyle: Checks Java source code for adherence to a set of rules.
-// Copyright (C) 2001-2021 the original author or authors.
-//
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
-
-package com.puppycrawl.tools.checkstyle.checks.indentation;
+package edu.uw.cs.checks.readability.indentation;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.puppycrawl.tools.checkstyle.FileStatefulCheck;
+import com.google.common.collect.Sets;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 
@@ -32,15 +13,13 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
  * <p>
  * Checks correct indentation of Java code.
  * </p>
+ * 
  * <p>
- * The idea behind this is that while
- * pretty printers are sometimes convenient for bulk reformats of
- * legacy code, they often either aren't configurable enough or
- * just can't anticipate how format should be done. Sometimes this is
- * personal preference, other times it is practical experience. In any
- * case, this check should just ensure that a minimal set of indentation
- * rules is followed.
+ * This check is heavily reliant on the original version in the checkstyle package except that
+ * this check allows for either 3 or 4 lines of indentation to be acceptable so long as the
+ * code is consistent about that choice.
  * </p>
+ * 
  * <p>
  * Basic offset indentation is used for indentation inside code blocks.
  * For any lines that span more than 1, line wrapping indentation is used for those lines
@@ -52,72 +31,7 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
  * afterwards, in that new code block, are increased on top of the line wrap and any
  * indentations above it.
  * </p>
- * <p>
- * Example:
- * </p>
- * <pre>
- * if ((condition1 &amp;&amp; condition2)
- *         || (condition3 &amp;&amp; condition4)    // line wrap with bigger indentation
- *         ||!(condition5 &amp;&amp; condition6)) { // line wrap with bigger indentation
- *   field.doSomething()                    // basic offset
- *       .doSomething()                     // line wrap
- *       .doSomething( c -&gt; {               // line wrap
- *         return c.doSome();               // basic offset
- *       });
- * }
- * </pre>
- * <ul>
- * <li>
- * Property {@code basicOffset} - Specify how far new indentation level should be
- * indented when on the next line.
- * Type is {@code int}.
- * Default value is {@code 4}.
- * </li>
- * <li>
- * Property {@code braceAdjustment} - Specify how far a braces should be indented
- * when on the next line.
- * Type is {@code int}.
- * Default value is {@code 0}.
- * </li>
- * <li>
- * Property {@code caseIndent} - Specify how far a case label should be indented
- * when on next line.
- * Type is {@code int}.
- * Default value is {@code 4}.
- * </li>
- * <li>
- * Property {@code throwsIndent} - Specify how far a throws clause should be
- * indented when on next line.
- * Type is {@code int}.
- * Default value is {@code 4}.
- * </li>
- * <li>
- * Property {@code arrayInitIndent} - Specify how far an array initialisation
- * should be indented when on next line.
- * Type is {@code int}.
- * Default value is {@code 4}.
- * </li>
- * <li>
- * Property {@code lineWrappingIndentation} - Specify how far continuation line
- * should be indented when line-wrapping is present.
- * Type is {@code int}.
- * Default value is {@code 4}.
- * </li>
- * <li>
- * Property {@code forceStrictCondition} - Force strict indent level in line
- * wrapping case. If value is true, line wrap indent have to be same as
- * lineWrappingIndentation parameter. If value is false, line wrap indent
- * could be bigger on any value user would like.
- * Type is {@code boolean}.
- * Default value is {@code false}.
- * </li>
- * </ul>
- * <p>
- * To configure the default check:
- * </p>
- * <pre>
- * &lt;module name="Indentation"/&gt;
- * </pre>
+ * 
  * <p>
  * Example of Compliant code for default configuration (in comment name of property
  * that controls indentations):
@@ -151,78 +65,6 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
  *    }
  * }
  * </pre>
- * <p>
- * To configure the check to enforce the indentation style recommended by Oracle:
- * </p>
- * <pre>
- * &lt;module name="Indentation"&gt;
- *   &lt;property name="caseIndent" value="0"/&gt;
- * &lt;/module&gt;
- * </pre>
- * <p>
- * Example of Compliant code for default configuration (in comment name of property that controls
- * indentation):
- * </p>
- * <pre>
- * void fooCase() {          // basicOffset
- *     switch (field) {      // basicOffset
- *     case "value" : bar(); // caseIndent
- *     }
- * }
- * </pre>
- * <p>
- * To configure the Check to enforce strict condition in line-wrapping validation.
- * </p>
- * <pre>
- * &lt;module name="Indentation"&gt;
- *   &lt;property name="forceStrictCondition" value="true"/&gt;
- * &lt;/module&gt;
- * </pre>
- * <p>
- * Such config doesn't allow next cases even code is aligned further to the right for better
- * reading:
- * </p>
- * <pre>
- * void foo(String aFooString,
- *         int aFooInt) { // indent:8 ; expected: 4; violation, because 8 != 4
- *     if (cond1
- *         || cond2) {
- *         field.doSomething()
- *             .doSomething();
- *     }
- *     if ((cond1 &amp;&amp; cond2)
- *               || (cond3 &amp;&amp; cond4)    // violation
- *               ||!(cond5 &amp;&amp; cond6)) { // violation
- *         field.doSomething()
- *              .doSomething()          // violation
- *              .doSomething( c -&gt; {    // violation
- *                  return c.doSome();
- *             });
- *     }
- * }
- * </pre>
- * <p>
- * But if forceStrictCondition = false, this code is valid:
- * </p>
- * <pre>
- * void foo(String aFooString,
- *         int aFooInt) { // indent:8 ; expected: &gt; 4; ok, because 8 &gt; 4
- *     if (cond1
- *         || cond2) {
- *         field.doSomething()
- *             .doSomething();
- *     }
- *     if ((cond1 &amp;&amp; cond2)
- *               || (cond3 &amp;&amp; cond4)
- *               ||!(cond5 &amp;&amp; cond6)) {
- *         field.doSomething()
- *              .doSomething()
- *              .doSomething( c -&gt; {
- *                  return c.doSome();
- *             });
- *     }
- * }
- * </pre>
  *
  * <p>
  * Parent is {@code com.puppycrawl.tools.checkstyle.TreeWalker}
@@ -244,12 +86,9 @@ import com.puppycrawl.tools.checkstyle.api.DetailAST;
  * {@code indentation.error.multi}
  * </li>
  * </ul>
- *
- * @noinspection ThisEscapedInObjectConstruction
- * @since 3.1
+ * @see IndentationCheck
  */
-@FileStatefulCheck
-public class IndentationCheck extends AbstractCheck {
+public class ProperIndentationCheck extends AbstractCheck {
 
     /*  -- Implementation --
      *
@@ -306,8 +145,8 @@ public class IndentationCheck extends AbstractCheck {
      */
     public static final String MSG_CHILD_ERROR_MULTI = "indentation.child.error.multi";
 
-    /** Default indentation amount - based on Sun. */
-    private static final int DEFAULT_INDENTATION = 4;
+    /** Default indentation amount - based on the style guide. */
+    private static final Set<Integer> DEFAULT_INDENTATION = Sets.newHashSet(3, 4);
 
     /** Handlers currently in use. */
     private final Deque<AbstractExpressionHandler> handlers = new ArrayDeque<>();
@@ -322,29 +161,29 @@ public class IndentationCheck extends AbstractCheck {
     private Set<Integer> incorrectIndentationLines;
 
     /** Specify how far new indentation level should be indented when on the next line. */
-    private int basicOffset = DEFAULT_INDENTATION;
+    private Set<Integer> basicOffset = DEFAULT_INDENTATION;
 
     /** Specify how far a case label should be indented when on next line. */
-    private int caseIndent = DEFAULT_INDENTATION;
+    private Set<Integer> caseIndent = DEFAULT_INDENTATION;
 
     /** Specify how far a braces should be indented when on the next line. */
-    private int braceAdjustment;
+    private Set<Integer> braceAdjustment;
 
     /** Specify how far a throws clause should be indented when on next line. */
-    private int throwsIndent = DEFAULT_INDENTATION;
+    private Set<Integer> throwsIndent = DEFAULT_INDENTATION;
 
     /** Specify how far an array initialisation should be indented when on next line. */
-    private int arrayInitIndent = DEFAULT_INDENTATION;
+    private Set<Integer> arrayInitIndent = DEFAULT_INDENTATION;
 
     /** Specify how far continuation line should be indented when line-wrapping is present. */
-    private int lineWrappingIndentation = DEFAULT_INDENTATION;
+    private Set<Integer> lineWrappingIndentation = DEFAULT_INDENTATION;
 
     /**
      * Force strict indent level in line wrapping case. If value is true, line wrap indent
      * have to be same as lineWrappingIndentation parameter. If value is false, line wrap indent
      * could be bigger on any value user would like.
      */
-    private boolean forceStrictCondition;
+    private boolean forceStrictCondition; // TODO: This will be a potential bug!
 
     /**
      * Getter to query strict indent level in line wrapping case. If value is true, line wrap indent
@@ -373,7 +212,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @param basicOffset   the number of tabs or spaces to indent
      */
-    public void setBasicOffset(int basicOffset) {
+    public void setBasicOffset(Set<Integer> basicOffset) {
         this.basicOffset = basicOffset;
     }
 
@@ -382,7 +221,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the number of tabs or spaces to indent
      */
-    public int getBasicOffset() {
+    public Set<Integer> getBasicOffset() {
         return basicOffset;
     }
 
@@ -391,7 +230,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @param adjustmentAmount   the brace offset
      */
-    public void setBraceAdjustment(int adjustmentAmount) {
+    public void setBraceAdjustment(Set<Integer> adjustmentAmount) {
         braceAdjustment = adjustmentAmount;
     }
 
@@ -400,7 +239,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the positive offset to adjust braces
      */
-    public int getBraceAdjustment() {
+    public Set<Integer> getBraceAdjustment() {
         return braceAdjustment;
     }
 
@@ -409,7 +248,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @param amount   the case indentation level
      */
-    public void setCaseIndent(int amount) {
+    public void setCaseIndent(Set<Integer> amount) {
         caseIndent = amount;
     }
 
@@ -418,7 +257,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the case indentation level
      */
-    public int getCaseIndent() {
+    public Set<Integer> getCaseIndent() {
         return caseIndent;
     }
 
@@ -427,7 +266,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @param throwsIndent the throws indentation level
      */
-    public void setThrowsIndent(int throwsIndent) {
+    public void setThrowsIndent(Set<Integer> throwsIndent) {
         this.throwsIndent = throwsIndent;
     }
 
@@ -436,7 +275,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the throws indentation level
      */
-    public int getThrowsIndent() {
+    public Set<Integer> getThrowsIndent() {
         return throwsIndent;
     }
 
@@ -445,7 +284,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @param arrayInitIndent the array initialisation indentation level
      */
-    public void setArrayInitIndent(int arrayInitIndent) {
+    public void setArrayInitIndent(Set<Integer> arrayInitIndent) {
         this.arrayInitIndent = arrayInitIndent;
     }
 
@@ -454,7 +293,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the initialisation indentation level
      */
-    public int getArrayInitIndent() {
+    public Set<Integer> getArrayInitIndent() {
         return arrayInitIndent;
     }
 
@@ -463,7 +302,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the line-wrapping indentation level
      */
-    public int getLineWrappingIndentation() {
+    public Set<Integer> getLineWrappingIndentation() {
         return lineWrappingIndentation;
     }
 
@@ -472,7 +311,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @param lineWrappingIndentation the line-wrapping indentation level
      */
-    public void setLineWrappingIndentation(int lineWrappingIndentation) {
+    public void setLineWrappingIndentation(Set<Integer> lineWrappingIndentation) {
         this.lineWrappingIndentation = lineWrappingIndentation;
     }
 
