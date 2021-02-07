@@ -1,58 +1,82 @@
-////////////////////////////////////////////////////////////////////////////////
-// checkstyle: Checks Java source code for adherence to a set of rules.
-// Copyright (C) 2001-2021 the original author or authors.
-//
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
-
-package com.puppycrawl.tools.checkstyle.checks.indentation;
+package edu.uw.cs.checks.readability.indentation;
 
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
- * Encapsulates representation of notion of expected indentation levels.
- * Provide a way to have multiple acceptable levels.
- * This class is immutable.
+ * <p>
+ * Encapsulates the idea of expected indentation levels.
+ * </p>
+ * <p>
+ * We want to provide a way for the user to either write code with n spaces or m spaces
+ * and either choice is okay so long as they are consistent with their choice. Within a 
+ * given choice, there are multiple acceptable places for some lines to be indented and
+ * we represent this with a BitSet object which essentially is just a list of positional
+ * booleans describing the acceptabiliy to indent the line to that position.
+ * </p>
+ * <p>
+ * You can think of this object as an "indentation guru" which you can ask if a certain
+ * indentation level is acceptable or not. For example, "is four spaces acceptable?" might
+ * return the result "true", but than "is five spaces acceptable?" might return false.
+ * </p>
  */
 public class IndentLevel {
 
-    /** Set of acceptable indentation levels. */
-    private final BitSet levels = new BitSet();
+    /** 
+     * Map of acceptable indentation levels.
+     * 
+     * As per the style guide, we do not care whether students use three or four spaces, so long
+     * as they are consistent with that choice. This map holds several (typically two) indentation
+     * levels which are acceptable and those integer indentation levels map to their own BitSet
+     * each of which correspond to the set of possible indentation choices for a tab-width of
+     * some number. Typically this will be three and four.
+     */
+    private final Map<Integer, BitSet> acceptableIndents = new HashMap<>();
 
     /**
-     * Creates new instance with one acceptable indentation level.
+     * Creates new instance with a set of acceptable indentation levels.
      *
-     * @param indent acceptable indentation level.
+     * @param indents set of acceptable indentation levels (ie. either 3 or 4 spaces).
      */
-    public IndentLevel(int indent) {
-        levels.set(indent);
+    public IndentLevel(Set<Integer> indentationLevels) {
+        for (int indentationLevel : indentationLevels) {
+            BitSet newBitSet = new BitSet();
+            newBitSet.set(indentationLevel);
+            acceptableIndents.putIfAbsent(indentationLevel, newBitSet);
+        }
     }
 
     /**
-     * Creates new instance for nested structure.
+     * Adds the acceptable offsets to their coresponding parent indentation level.
      *
      * @param base parent's level
-     * @param offsets offsets from parent's level.
+     * @param offsets offsets from parent's level (ie. either 3 or 4 spaces).
      */
-    public IndentLevel(IndentLevel base, int... offsets) {
-        final BitSet src = base.levels;
-        for (int i = src.nextSetBit(0); i >= 0; i = src.nextSetBit(i + 1)) {
-            for (int offset : offsets) {
-                levels.set(i + offset);
-            }
-        }
+    public IndentLevel(IndentLevel baseIndentLevel, Set<Integer> acceptableOffsets) {
+        
+        // get the base indentation bitset
+        // while there is a next set bit in the base indentation level
+            // add the corresponding offset to this bitset's acceptableIndentation levles
+
+        // this code is so ugly omg
+        // for (BitSet srcBitSet : baseIndentLevel.levels) {
+        //     for (int i = srcBitSet.nextSetBit(0); i >= 0; i = srcBitSet.nextSetBit(i + 1)) {
+        //         for (int offset : acceptableOffsets) {
+        //             for (BitSet bitSet : levels) {
+        //                 bitSet.set(i + offset);
+        //             }
+        //         }
+        //     }
+        // }
+        // final BitSet src = base.levels;
+        // for (int i = src.nextSetBit(0); i >= 0; i = src.nextSetBit(i + 1)) {
+        //     for (int offset : offsets) {
+        //         levels.set(i + offset);
+        //     }
+        // }
     }
 
     /**
@@ -60,6 +84,7 @@ public class IndentLevel {
      * This is only used internally to combine multiple levels.
      */
     private IndentLevel() {
+        // implementation is intentionally left blank
     }
 
     /**
@@ -68,7 +93,12 @@ public class IndentLevel {
      * @return whether we have more than one level.
      */
     public final boolean isMultiLevel() {
-        return levels.cardinality() > 1;
+        for (BitSet bitSet : indentationLevels) {
+            if (bitSet.cardinality() > 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -79,7 +109,14 @@ public class IndentLevel {
      *         false otherwise.
      */
     public boolean isAcceptable(int indent) {
-        return levels.get(indent);
+        for (BitSet bitSet : levels) {
+            if (bitSet.get(indent)) {
+                levels.clear();
+                levels.add(bitSet);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -91,7 +128,12 @@ public class IndentLevel {
      *         acceptable indentation levels, false otherwise.
      */
     public boolean isGreaterThan(int indent) {
-        return levels.nextSetBit(0) > indent;
+        for (BitSet bitSet : levels) {
+            if (bitSet.nextSetBit(0) > indent) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -103,9 +145,15 @@ public class IndentLevel {
      */
     public static IndentLevel addAcceptable(IndentLevel base, int... additions) {
         final IndentLevel result = new IndentLevel();
-        result.levels.or(base.levels);
-        for (int addition : additions) {
-            result.levels.set(addition);
+        for (BitSet resultBitSet : result.levels) {
+            for (BitSet baseBitSet : base.levels) {
+                resultBitSet.or(baseBitSet);
+            }
+        }
+        for (BitSet resultBitSet : result.levels) {
+            for (int addition : additions) {
+                resultBitSet.set(addition);
+            }
         }
         return result;
     }
@@ -130,7 +178,11 @@ public class IndentLevel {
      * @return indentation level.
      */
     public int getFirstIndentLevel() {
-        return levels.nextSetBit(0);
+        int firstIndentLevel = Integer.MAX_VALUE;
+        for (BitSet bitSet : levels) {
+            firstIndentLevel = Math.min(firstIndentLevel, bitSet.nextSetBit(0));
+        }
+        return firstIndentLevel;
     }
 
     /**
@@ -139,7 +191,11 @@ public class IndentLevel {
      * @return indentation level.
      */
     public int getLastIndentLevel() {
-        return levels.length() - 1;
+        int lastIndentLevel = Integer.MIN_VALUE;
+        for (BitSet bitSet : levels) {
+            lastIndentLevel = Math.max(lastIndentLevel, bitSet.length() - 1);
+        }
+        return lastIndentLevel;
     }
 
     @Override
@@ -161,5 +217,4 @@ public class IndentLevel {
         }
         return result;
     }
-
 }

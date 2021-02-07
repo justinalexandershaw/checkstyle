@@ -1,23 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// checkstyle: Checks Java source code for adherence to a set of rules.
-// Copyright (C) 2001-2021 the original author or authors.
-//
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
-
-package com.puppycrawl.tools.checkstyle.checks.indentation;
+package edu.uw.cs.checks.readability.indentation;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -91,15 +72,13 @@ public class HandlerFactory {
     /**
      * Registers a handler.
      *
-     * @param type
-     *                type from TokenTypes
-     * @param handlerClass
-     *                the handler to register
+     * @param type type from TokenTypes
+     * @param handlerClass the handler to register
      * @param <T> type of the handler class object.
      */
     private <T> void register(int type, Class<T> handlerClass) {
         final Constructor<T> ctor = CommonUtil.getConstructor(handlerClass,
-                IndentationCheck.class,
+                ProperIndentationCheck.class,
                 // current AST
                 DetailAST.class,
                 // parent
@@ -145,7 +124,7 @@ public class HandlerFactory {
      *
      * @return the ExpressionHandler for ast
      */
-    public AbstractExpressionHandler getHandler(IndentationCheck indentCheck,
+    public AbstractExpressionHandler getHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         final AbstractExpressionHandler resultHandler;
         final AbstractExpressionHandler handler =
@@ -173,7 +152,7 @@ public class HandlerFactory {
      *
      * @return new instance.
      */
-    private AbstractExpressionHandler createMethodCallHandler(IndentationCheck indentCheck,
+    private AbstractExpressionHandler createMethodCallHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         DetailAST astNode = ast.getFirstChild();
         while (astNode.getType() == TokenTypes.DOT) {

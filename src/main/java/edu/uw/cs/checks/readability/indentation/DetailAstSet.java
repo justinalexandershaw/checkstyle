@@ -1,23 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// checkstyle: Checks Java source code for adherence to a set of rules.
-// Copyright (C) 2001-2021 the original author or authors.
-//
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
-
-package com.puppycrawl.tools.checkstyle.checks.indentation;
+package edu.uw.cs.checks.readability.indentation;
 
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -32,9 +13,9 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 public class DetailAstSet {
 
     /**
-     * The instance of {@code IndentationCheck} used by this class.
+     * The instance of {@code ProperIndentationCheck} used by this class.
      */
-    private final IndentationCheck indentCheck;
+    private final ProperIndentationCheck indentCheck;
 
     /**
      * Maps line numbers to their ast.
@@ -42,11 +23,11 @@ public class DetailAstSet {
     private final SortedMap<Integer, DetailAST> astLines = new TreeMap<>();
 
     /**
-     * Construct an instance of this class with {@code IndentationCheck} parameters.
+     * Construct an instance of this class with {@code ProperIndentationCheck} parameters.
      *
-     * @param indentCheck IndentationCheck parameters
+     * @param indentCheck ProperIndentationCheck parameters
      */
-    public DetailAstSet(IndentationCheck indentCheck) {
+    public DetailAstSet(ProperIndentationCheck indentCheck) {
         this.indentCheck = indentCheck;
     }
 
@@ -132,11 +113,10 @@ public class DetailAstSet {
      * @return the column number for the start of the expression
      */
     protected final int expandedTabsColumnNo(DetailAST ast) {
-        final String line =
-            indentCheck.getLine(ast.getLineNo() - 1);
+        final String line = indentCheck.getLine(ast.getLineNo() - 1);
 
         return CommonUtil.lengthExpandedTabs(line, ast.getColumnNo(),
-            indentCheck.getIndentationTabWidth());
+                indentCheck.getIndentationTabWidth());
     }
 
 }

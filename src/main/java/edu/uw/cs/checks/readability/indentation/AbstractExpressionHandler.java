@@ -1,25 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-// checkstyle: Checks Java source code for adherence to a set of rules.
-// Copyright (C) 2001-2021 the original author or authors.
-//
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
-
-package com.puppycrawl.tools.checkstyle.checks.indentation;
+package edu.uw.cs.checks.readability.indentation;
 
 import java.util.Arrays;
+import java.util.Set;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 import com.puppycrawl.tools.checkstyle.api.TokenTypes;
@@ -32,9 +14,9 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 public abstract class AbstractExpressionHandler {
 
     /**
-     * The instance of {@code IndentationCheck} using this handler.
+     * The instance of {@code ProperIndentationCheck} using this handler.
      */
-    private final IndentationCheck indentCheck;
+    private final ProperIndentationCheck indentCheck;
 
     /** The AST which is handled by this handler. */
     private final DetailAST mainAst;
@@ -57,7 +39,7 @@ public abstract class AbstractExpressionHandler {
      * @param expr          the abstract syntax tree
      * @param parent        the parent handler
      */
-    protected AbstractExpressionHandler(IndentationCheck indentCheck, String typeName,
+    protected AbstractExpressionHandler(ProperIndentationCheck indentCheck, String typeName,
             DetailAST expr, AbstractExpressionHandler parent) {
         this.indentCheck = indentCheck;
         this.typeName = typeName;
@@ -139,9 +121,9 @@ public abstract class AbstractExpressionHandler {
         else {
             typeStr = " " + subtypeName;
         }
-        String messageKey = IndentationCheck.MSG_ERROR;
+        String messageKey = ProperIndentationCheck.MSG_ERROR;
         if (expectedIndent.isMultiLevel()) {
-            messageKey = IndentationCheck.MSG_ERROR_MULTI;
+            messageKey = ProperIndentationCheck.MSG_ERROR_MULTI;
         }
         indentCheck.indentationLog(ast, messageKey,
             typeName + typeStr, actualIndent, expectedIndent);
@@ -157,9 +139,9 @@ public abstract class AbstractExpressionHandler {
     private void logChildError(DetailAST ast,
                                int actualIndent,
                                IndentLevel expectedIndent) {
-        String messageKey = IndentationCheck.MSG_CHILD_ERROR;
+        String messageKey = ProperIndentationCheck.MSG_CHILD_ERROR;
         if (expectedIndent.isMultiLevel()) {
-            messageKey = IndentationCheck.MSG_CHILD_ERROR_MULTI;
+            messageKey = ProperIndentationCheck.MSG_CHILD_ERROR_MULTI;
         }
         indentCheck.indentationLog(ast, messageKey,
             typeName, actualIndent, expectedIndent);
@@ -521,7 +503,7 @@ public abstract class AbstractExpressionHandler {
      *
      * @return the IndentCheck attribute
      */
-    protected final IndentationCheck getIndentCheck() {
+    protected final ProperIndentationCheck getIndentCheck() {
         return indentCheck;
     }
 
@@ -544,21 +526,21 @@ public abstract class AbstractExpressionHandler {
     }
 
     /**
-     * A shortcut for {@code IndentationCheck} property.
+     * A shortcut for {@code ProperIndentationCheck} property.
      *
-     * @return value of basicOffset property of {@code IndentationCheck}
+     * @return value of basicOffset property of {@code ProperIndentationCheck}
      */
-    protected final int getBasicOffset() {
+    protected final Set<Integer> getBasicOffset() {
         return indentCheck.getBasicOffset();
     }
 
     /**
-     * A shortcut for {@code IndentationCheck} property.
+     * A shortcut for {@code ProperIndentationCheck} property.
      *
      * @return value of braceAdjustment property
-     *         of {@code IndentationCheck}
+     *         of {@code ProperIndentationCheck}
      */
-    protected final int getBraceAdjustment() {
+    protected final Set<Integer> getBraceAdjustment() {
         return indentCheck.getBraceAdjustment();
     }
 

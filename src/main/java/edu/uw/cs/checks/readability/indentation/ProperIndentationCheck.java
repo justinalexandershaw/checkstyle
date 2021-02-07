@@ -3,9 +3,9 @@ package edu.uw.cs.checks.readability.indentation;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import com.puppycrawl.tools.checkstyle.api.AbstractCheck;
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
 
@@ -146,7 +146,7 @@ public class ProperIndentationCheck extends AbstractCheck {
     public static final String MSG_CHILD_ERROR_MULTI = "indentation.child.error.multi";
 
     /** Default indentation amount - based on the style guide. */
-    private static final Set<Integer> DEFAULT_INDENTATION = Sets.newHashSet(3, 4);
+    private static final Set<Integer> DEFAULT_INDENTATION = newDefaultIndentationSet();
 
     /** Handlers currently in use. */
     private final Deque<AbstractExpressionHandler> handlers = new ArrayDeque<>();
@@ -394,6 +394,13 @@ public class ProperIndentationCheck extends AbstractCheck {
      */
     public HandlerFactory getHandlerFactory() {
         return handlerFactory;
+    }
+
+    private static Set<Integer> newDefaultIndentationSet() {
+        Set<Integer> set = new LinkedHashSet<>();
+        set.add(3);
+        set.add(4);
+        return set;
     }
 
 }

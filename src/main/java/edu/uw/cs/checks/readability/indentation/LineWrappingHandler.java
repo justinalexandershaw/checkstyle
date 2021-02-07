@@ -1,27 +1,9 @@
-////////////////////////////////////////////////////////////////////////////////
-// checkstyle: Checks Java source code for adherence to a set of rules.
-// Copyright (C) 2001-2021 the original author or authors.
-//
-// This library is free software; you can redistribute it and/or
-// modify it under the terms of the GNU Lesser General Public
-// License as published by the Free Software Foundation; either
-// version 2.1 of the License, or (at your option) any later version.
-//
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public
-// License along with this library; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-////////////////////////////////////////////////////////////////////////////////
-
-package com.puppycrawl.tools.checkstyle.checks.indentation;
+package edu.uw.cs.checks.readability.indentation;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.puppycrawl.tools.checkstyle.api.DetailAST;
@@ -85,19 +67,18 @@ public class LineWrappingHandler {
     };
 
     /**
-     * The current instance of {@code IndentationCheck} class using this
+     * The current instance of {@code ProperIndentationCheck} class using this
      * handler. This field used to get access to private fields of
-     * IndentationCheck instance.
+     * ProperIndentationCheck instance.
      */
-    private final IndentationCheck indentCheck;
+    private final ProperIndentationCheck indentCheck;
 
     /**
      * Sets values of class field, finds last node and calculates indentation level.
      *
-     * @param instance
-     *            instance of IndentationCheck.
+     * @param instance an instance of ProperIndentationCheck.
      */
-    public LineWrappingHandler(IndentationCheck instance) {
+    public LineWrappingHandler(ProperIndentationCheck instance) {
         indentCheck = instance;
     }
 
@@ -117,9 +98,9 @@ public class LineWrappingHandler {
      *
      * @param firstNode First node to start examining.
      * @param lastNode Last node to examine inclusively.
-     * @param indentLevel Indentation all wrapped lines should use.
+     * @param indentLevel Indentation level choice all wrapped lines should use.
      */
-    private void checkIndentation(DetailAST firstNode, DetailAST lastNode, int indentLevel) {
+    private void checkIndentation(DetailAST firstNode, DetailAST lastNode, Set<Integer> indentLevel) {
         checkIndentation(firstNode, lastNode, indentLevel,
                 -1, LineWrappingOptions.IGNORE_FIRST_LINE);
     }
@@ -392,14 +373,14 @@ public class LineWrappingHandler {
         if (indentCheck.isForceStrictCondition()) {
             if (expandedTabsColumnNo(currentNode) != currentIndent) {
                 indentCheck.indentationLog(currentNode,
-                        IndentationCheck.MSG_ERROR, currentNode.getText(),
+                        ProperIndentationCheck.MSG_ERROR, currentNode.getText(),
                         expandedTabsColumnNo(currentNode), currentIndent);
             }
         }
         else {
             if (expandedTabsColumnNo(currentNode) < currentIndent) {
                 indentCheck.indentationLog(currentNode,
-                        IndentationCheck.MSG_ERROR, currentNode.getText(),
+                        ProperIndentationCheck.MSG_ERROR, currentNode.getText(),
                         expandedTabsColumnNo(currentNode), currentIndent);
             }
         }
