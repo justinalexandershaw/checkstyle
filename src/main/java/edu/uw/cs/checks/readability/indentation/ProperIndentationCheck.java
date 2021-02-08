@@ -396,6 +396,10 @@ public class ProperIndentationCheck extends AbstractCheck {
         return handlerFactory;
     }
 
+    /**
+     * Creates a new indentation set with values 3 and 4.
+     * @return the new default indentation set which holds 3 and 4.
+     */
     private static Set<Integer> newDefaultIndentationSet() {
         Set<Integer> set = new LinkedHashSet<>();
         set.add(3);
