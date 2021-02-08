@@ -17,7 +17,7 @@ public class MemberDefHandler extends AbstractExpressionHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public MemberDefHandler(IndentationCheck indentCheck,
+    public MemberDefHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "member def", ast, parent);
     }

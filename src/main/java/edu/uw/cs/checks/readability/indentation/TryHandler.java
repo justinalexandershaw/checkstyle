@@ -17,7 +17,7 @@ public class TryHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public TryHandler(IndentationCheck indentCheck,
+    public TryHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "try", ast, parent);
     }

@@ -16,7 +16,7 @@ public class FinallyHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public FinallyHandler(IndentationCheck indentCheck,
+    public FinallyHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "finally", ast, parent);
     }

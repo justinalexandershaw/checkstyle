@@ -17,7 +17,7 @@ public class ClassDefHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public ClassDefHandler(IndentationCheck indentCheck,
+    public ClassDefHandler(ProperIndentationCheck indentCheck,
                            DetailAST ast,
                            AbstractExpressionHandler parent) {
         super(indentCheck, getHandlerName(ast), ast, parent);

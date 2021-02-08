@@ -17,7 +17,7 @@ public class ForHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public ForHandler(IndentationCheck indentCheck,
+    public ForHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "for", ast, parent);
     }

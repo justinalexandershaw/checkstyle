@@ -17,7 +17,7 @@ public class WhileHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public WhileHandler(IndentationCheck indentCheck,
+    public WhileHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "while", ast, parent);
     }

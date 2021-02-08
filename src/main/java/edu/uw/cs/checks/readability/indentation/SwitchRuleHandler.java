@@ -24,7 +24,7 @@ public class SwitchRuleHandler extends AbstractExpressionHandler {
      * @param expr        the abstract syntax tree
      * @param parent      the parent handler
      */
-    public SwitchRuleHandler(IndentationCheck indentCheck,
+    public SwitchRuleHandler(ProperIndentationCheck indentCheck,
                        DetailAST expr, AbstractExpressionHandler parent) {
         super(indentCheck, "case", expr, parent);
     }

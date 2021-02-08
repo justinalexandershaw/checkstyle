@@ -16,7 +16,7 @@ public class StaticInitHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public StaticInitHandler(IndentationCheck indentCheck,
+    public StaticInitHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "static initialization", ast, parent);
     }

@@ -60,6 +60,20 @@ public class IndentLevel {
         }
     }
 
+
+    /**
+     * Creates new instance with a list of acceptable indentation levels.
+     *
+     * @param indents set of acceptable indentation levels (ie. either 3 or 4 spaces).
+     */
+    public IndentLevel(int... indentationLevels) {
+        for (int indentationLevel : indentationLevels) {
+            BitSet newBitSet = new BitSet();
+            newBitSet.set(indentationLevel);
+            acceptableIndents.putIfAbsent(indentationLevel, newBitSet);
+        }
+    }
+
     /**
      * Adds the acceptable offsets to their coresponding parent indentation level.
      *

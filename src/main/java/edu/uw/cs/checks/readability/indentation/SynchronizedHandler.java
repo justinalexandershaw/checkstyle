@@ -22,7 +22,7 @@ public class SynchronizedHandler extends BlockParentHandler {
      * @param ast         the abstract syntax tree
      * @param parent      the parent handler
      */
-    public SynchronizedHandler(IndentationCheck indentCheck, DetailAST ast,
+    public SynchronizedHandler(ProperIndentationCheck indentCheck, DetailAST ast,
                                AbstractExpressionHandler parent) {
         super(indentCheck, "synchronized", ast, parent);
         methodModifier = isMethodModifier(ast);

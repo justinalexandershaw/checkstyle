@@ -17,7 +17,7 @@ public class PackageDefHandler extends AbstractExpressionHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public PackageDefHandler(IndentationCheck indentCheck,
+    public PackageDefHandler(ProperIndentationCheck indentCheck,
             DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "package def", ast, parent);
     }

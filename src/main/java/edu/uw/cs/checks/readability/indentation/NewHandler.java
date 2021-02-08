@@ -20,7 +20,7 @@ public class NewHandler extends AbstractExpressionHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public NewHandler(IndentationCheck indentCheck,
+    public NewHandler(ProperIndentationCheck indentCheck,
                       DetailAST ast,
                       AbstractExpressionHandler parent) {
         super(indentCheck, "new", ast, parent);

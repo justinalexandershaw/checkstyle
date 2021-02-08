@@ -44,7 +44,7 @@ public class SlistHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public SlistHandler(IndentationCheck indentCheck,
+    public SlistHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "block", ast, parent);
     }

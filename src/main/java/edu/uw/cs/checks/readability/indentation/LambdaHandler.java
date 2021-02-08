@@ -23,7 +23,7 @@ public class LambdaHandler extends AbstractExpressionHandler {
      * @param ast the abstract syntax tree
      * @param parent the parent handler
      */
-    public LambdaHandler(IndentationCheck indentCheck,
+    public LambdaHandler(ProperIndentationCheck indentCheck,
                          DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "lambda", ast, parent);
     }

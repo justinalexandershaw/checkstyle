@@ -18,7 +18,7 @@ public class IfHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public IfHandler(IndentationCheck indentCheck,
+    public IfHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "if", ast, parent);
     }

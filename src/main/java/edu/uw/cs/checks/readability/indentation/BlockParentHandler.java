@@ -50,7 +50,7 @@ public class BlockParentHandler extends AbstractExpressionHandler {
      * @param parent        the parent handler
      * @noinspection WeakerAccess
      */
-    public BlockParentHandler(IndentationCheck indentCheck,
+    public BlockParentHandler(ProperIndentationCheck indentCheck,
         String name, DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, name, ast, parent);
     }

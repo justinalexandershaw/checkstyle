@@ -16,7 +16,7 @@ public class YieldHandler extends AbstractExpressionHandler {
      * @param ast         the abstract syntax tree
      * @param parent      the parent handler
      */
-    public YieldHandler(IndentationCheck indentCheck,
+    public YieldHandler(ProperIndentationCheck indentCheck,
                       DetailAST ast,
                       AbstractExpressionHandler parent) {
         super(indentCheck, "yield", ast, parent);

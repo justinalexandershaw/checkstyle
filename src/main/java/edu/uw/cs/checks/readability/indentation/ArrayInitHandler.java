@@ -22,7 +22,7 @@ public class ArrayInitHandler extends BlockParentHandler {
      * @param ast           the abstract syntax tree
      * @param parent        the parent handler
      */
-    public ArrayInitHandler(IndentationCheck indentCheck,
+    public ArrayInitHandler(ProperIndentationCheck indentCheck,
         DetailAST ast, AbstractExpressionHandler parent) {
         super(indentCheck, "array initialization", ast, parent);
     }
