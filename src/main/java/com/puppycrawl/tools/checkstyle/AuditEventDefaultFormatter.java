@@ -27,23 +27,22 @@ import com.puppycrawl.tools.checkstyle.api.SeverityLevel;
 /**
  * Represents the default formatter for log message.
  * Default log message format is:
- * [SEVERITY LEVEL] filePath:lineNo:columnNo: message. [CheckName]
+ * [SEVERITY LEVEL] CheckName: message. filePath:lineNo:columnNo:
  * When the module id of the message has been set, the format is:
- * [SEVERITY LEVEL] filePath:lineNo:columnNo: message. [ModuleId]
+ * [SEVERITY LEVEL] ModuleId: message. (filePath, line #)
  */
 public class AuditEventDefaultFormatter implements AuditEventFormatter {
 
     /** Length of all separators. */
-    private static final int LENGTH_OF_ALL_SEPARATORS = 10;
+    private static final int LENGTH_OF_ALL_SEPARATORS = 15;
 
     /** Suffix of module names like XXXXCheck. */
     private static final String SUFFIX = "Check";
 
     @Override
     public String format(AuditEvent event) {
-        final String fileName = event.getFileName();
+        final String fileName = getShortFileName(event.getFileName());
         final String message = event.getMessage();
-
         final SeverityLevel severityLevel = event.getSeverityLevel();
         final String severityLevelName;
         if (severityLevel == SeverityLevel.WARNING) {
@@ -59,21 +58,12 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
         final int bufLen = calculateBufferLength(event, severityLevelName.length());
         final StringBuilder sb = new StringBuilder(bufLen);
 
-        sb.append('[').append(severityLevelName).append("] ")
-            .append(fileName).append(':').append(event.getLine());
-        if (event.getColumn() > 0) {
-            sb.append(':').append(event.getColumn());
-        }
-        sb.append(": ").append(message).append(" [");
-        if (event.getModuleId() == null) {
-            final String checkShortName = getCheckShortName(event);
-            sb.append(checkShortName);
-        }
-        else {
-            sb.append(event.getModuleId());
-        }
-        sb.append(']');
-
+        // [ERROR] NameOfTheCheck: This is the message to fix it. (FileName.java:1:2)
+        sb.append('[').append(severityLevelName).append("] ");
+        sb.append(event.getModuleId() == null ? getCheckShortName(event) : event.getModuleId());
+        sb.append(": ").append(message).append(' ');
+        sb.append('(').append(fileName);
+        sb.append(':').append(event.getLine()).append(':').append(event.getColumn()).append(')');
         return sb.toString();
     }
 
@@ -87,7 +77,7 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
      * @return the length of the buffer for StringBuilder.
      */
     private static int calculateBufferLength(AuditEvent event, int severityLevelNameLength) {
-        return LENGTH_OF_ALL_SEPARATORS + event.getFileName().length()
+        return LENGTH_OF_ALL_SEPARATORS + getShortFileName(event.getFileName()).length()
             + event.getMessage().length() + severityLevelNameLength
             + getCheckShortName(event).length();
     }
@@ -120,6 +110,19 @@ public class AuditEventDefaultFormatter implements AuditEventFormatter {
             }
         }
         return checkShortName;
+    }
+
+    /**
+     * Returns the shortened version of the filename (without the folders).
+     */
+    private static String getShortFileName(String fileName) {
+        final int lastSlashIndex = fileName.lastIndexOf('/');
+        final int indexOfLastChar = fileName.length() - 1;
+        if (lastSlashIndex == -1 && lastSlashIndex < indexOfLastChar) {
+            return fileName;
+        } else {
+            return fileName.substring(lastSlashIndex + 1);
+        }
     }
 
 }

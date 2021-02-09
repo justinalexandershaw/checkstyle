@@ -553,7 +553,7 @@ public class IndentationCheck extends AbstractCheck {
      *
      * @return the handler factory
      */
-    public final HandlerFactory getHandlerFactory() {
+    public HandlerFactory getHandlerFactory() {
         return handlerFactory;
     }
 

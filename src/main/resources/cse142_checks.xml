@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+  <module name="TreeWalker">
+    <!-- ADVANCED -->
+    
+    <!-- Enforces the no ternary operators (inline conditionals) rule. -->
+    <module name="AvoidInlineConditionals">
+      <property name="id" value="NoTernaryOperators"/>
+      <message key="inline.conditional.avoid" 
+       value="Advanced material is not allowed. Try removing this ternary operator."
+       />
+    </module>
+
+    <!-- CONTROL STRUCTURE -->
+
+    <!-- METHODS -->
+
+    <!-- READABILITY -->
+
+    <!-- Checks there are no non-blank prints in main. -->
+    <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
+
+    <!-- REDUNDANCY -->
+
+    <!-- STRUCTURE -->
+
+    <!-- Enforces the no package statement rule. -->
+    <module name="edu.uw.cs.checks.structure.NoPackageStatementsCheck" />
+    <!-- Enforces the wildcard-only import rule. -->
+    <module name="edu.uw.cs.checks.structure.OnlyWildcardImportsCheck" />
+  </module>
+
+  <!-- COMMENTS -->
+
+  <!-- Matches either a comment (// or /*) or nothing followed by a legal name. Our legal name
+  matcher is quite generous and can include up to four name tokens each of which can incude
+  one or more case-insensitive alphebetic characters followed optionall by a modifying token
+  (modifying tokens are either a ' - or . character) followed by any number of alphebetical
+  characters (possibly zero). I ran this test code against all the student names in my section
+  from Wi21 and also some hand-selected "harder" names and they all passed. -->
+  <module name="RegexpHeader">
+    <property name="header" value="^(\/\/|\/\*)?\s*([a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*[a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*[a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*[a-zA-Z]+['|-|\.]?[a-zA-Z]*\s*)$" />
+    <message key="header.mismatch" value="Your file must include a comment header that includes your name."/>
+  </module>
+</module>
