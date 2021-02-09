@@ -4,25 +4,90 @@
     "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
+  <!-- Checks that no lines of code are longer than 100 characers. -->
+  <module name="LineLength">
+    <property name="max" value="100"/>
+  </module>
+
   <module name="TreeWalker">
-    <!-- ADVANCED -->
-    
-    <!-- Enforces the no ternary operators (inline conditionals) rule. -->
-    <module name="AvoidInlineConditionals">
-      <property name="id" value="NoTernaryOperators"/>
-      <message key="inline.conditional.avoid" 
-       value="Advanced material is not allowed. Try removing this ternary operator."
-       />
+    <property name="tabWidth" value="4"/> 
+    <!-- MISCELLANEOUS -->
+    <!-- Checks that string literals are not used with == or != but .equals() instead. -->
+    <module name="StringLiteralEquality"/>
+    <!-- Prefers the user remove unncessary parentheses. -->
+    <module name="UnnecessaryParentheses">
+      <property name="severity" value="info"/>
+    </module>
+    <!-- Prefers the user writes "Java-style" array types. -->
+    <module name="ArrayTypeStyle">
+      <property name="severity" value="info"/>
     </module>
 
     <!-- CONTROL STRUCTURE -->
-
-    <!-- METHODS -->
+    <!-- Checks that boolean expressions match boolean zen principles. -->
+    <module name="SimplifyBooleanExpression"/>
+    <!-- Checks that boolean returns match boolean zen principles. -->
+    <module name="SimplifyBooleanReturn"/>
 
     <!-- READABILITY -->
 
     <!-- Checks there are no non-blank prints in main. -->
     <module name="edu.uw.cs.checks.readability.MainIsAConsiseSummaryCheck" />
+    <!-- Checks that there is a blank line after methods. -->
+    <module name="EmptyLineSeparator">
+      <property name="tokens" value="METHOD_DEF"/>
+      <message key="empty.line.separator" 
+        value="Try adding a blank line between methods to increase readability."
+      />
+    </module>
+    <!-- Checks that all class constants follow the SCREAMING_CASE naming convention. -->
+    <module name="ConstantName">
+      <message key="name.invalidPattern" 
+        value="Class constant named ''{0}'' should be UPPERCASE_WITH_UNDERSCORES."
+      />
+    </module>
+    <!-- Checks that all local, non-final variables follow the lowerCamelCase naming convention. -->
+    <module name="LocalVariableName">
+      <message key="name.invalidPattern" 
+        value="Local variable named ''{0}'' should be lowerCamelCase."
+      />
+    </module>
+    <!-- Checks that all parameters follow the lowerCamelCase naming convention. -->
+    <module name="ParameterName">
+      <message key="name.invalidPattern" 
+        value="Parameter named ''{0}'' should be lowerCamelCase."
+      />
+    </module>
+    <!-- Checks that all methods follow the lowerCamelCase naming convention. -->
+    <module name="MethodName">
+      <message key="name.invalidPattern" 
+        value="Method named ''{0}'' should be lowerCamelCase."
+      />
+    </module>
+    <!-- Prefers that the user adds whitespace around all operators. -->
+    <module name="WhitespaceAround">
+      <property name="severity" value="info"/>
+      <property name="tokens"
+        value="ASSIGN, COLON, DIV, DIV_ASSIGN, EQUAL, GE, GT, LAND, LE, LOR, LT, MINUS,
+          MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, STAR, STAR_ASSIGN"
+      />
+    </module>
+    <!-- Prefers that the user puts left curly braces on the same line. -->
+    <module name="LeftCurly">
+      <property name="severity" value="info"/>
+    </module>
+    <!-- Prefers that the user puts right curly braces on the same line as else or a newline. -->
+    <module name="RightCurly">
+      <property name="severity" value="info"/>
+      <property name="tokens" 
+        value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, CLASS_DEF,
+          METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO, INTERFACE_DEF"
+      />
+    </module>
+    <!-- Prefers that the user uses curly braces for all code blocks. -->
+    <module name="NeedBraces">
+      <property name="severity" value="info"/>
+    </module>
 
     <!-- REDUNDANCY -->
 
