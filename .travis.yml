@@ -37,6 +37,12 @@ jobs:
        - CMD="export PULL_REQUEST=$TRAVIS_PULL_REQUEST && ./.ci/travis/travis.sh pr-description"
        - SKIP_JOB_BY_FILES="false"
 
+    # testing closed to do issues
+    - env:
+       - DESC="test closed to do issues"
+       - CMD="./.ci/no_old_refs.sh"
+       - SKIP_JOB_BY_FILES="false"
+
     # moved to azure-pipelines.yml
     # new questionably spelled words
     # - env:
@@ -224,6 +230,13 @@ jobs:
     #     - DESC="no error test on simple-binary-encoding"
     #     - USE_MAVEN_REPO="true"
     #     - CMD="./.ci/travis/travis.sh no-error-test-sbe"
+
+    # No error testing - XWiki project non regression
+    - jdk: openjdk8
+      env:
+        - DESC="non regression on XWiki project"
+        - USE_MAVEN_REPO="true"
+        - CMD="./.ci/travis/travis.sh no-error-xwiki"
 
     # moved to azure-pipelines.yml
     # versions to update
