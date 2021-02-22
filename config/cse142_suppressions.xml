@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<!-- 
+Because there are two versions of most checks, we have to turn on and 
+turn off each version based on the name of the file we are checking.
+We do that by suppressing checks based on a regex filename matcher.
+For example, the "BlankLineBeforeMethod" check starts counting as a
+deduction in HW3, starts being marked as -0 in HW2, and should not be
+mentioned at all in HW1. The following table helps describe how we will
+achieve this suppression matrix:
+
+    Homework #      HW1         HW2 (-0)    HW3 (-1)
+    CheckError      suppress    suppress    show
+    CheckWarning    suppress    show        suppress
+
+Note that we never want to show both versions of the check for any given
+filename. Therefore, it is not enough to just suppress checks on certain
+homework files, we actually need to make sure that if one regex matches
+then the other regex will not match. We do this by using negative
+look-behinds.
+
+By default, CheckError should be un-suppressed, and should only become
+suppressed for the homework files where it is irrelevant. Conversely,
+the CheckWarning should be suppressed by default, and should only become
+un-suppressed for the homework where it is marked as a -0 (one week before
+it starts being marked as a regular deduction). Therefore, we might see
+a suppression that models this behavior like the following, where the first
+line will suppress CheckError for either HW1.java or HW2.java and the
+second line will suppress CheckWarning for files not named HW2.java. Take
+a look at the example below:
+
+    <suppress id="CheckError" files="(HW1|HW2)\.java"/>
+    <suppress id="CheckWarning" files="(?<!HW2)\.java"/>
+
+Clearly, different professors will use different homework file names, so
+we compiled a list of common ones used by common professors. This should
+be a fairly exhaustive list, but if you see one that is missing please
+update the list. Note that '-' means the professor uses the same name as
+a program already named in that given row
+
+    Homework    Stuart              Brett
+    HW1         Song                -
+    HW2         DrawRocket          SpaceNeedle
+    HW3         CafeWall            -
+    HW4         Admit               Budgeter
+    HW5         Guess               GuessingGame
+    HW6         Names               MadLibs
+    HW7         Personality         -
+    HW8         Bear, Lion, Giant, FlyTrap, Food, Cat, Dog, Pigeon, LabTA
+                Ant, Bird, Vulture, Hippo, Rabbit, Frog, Elephant
+
+Want a quick refresher on the syntax of negative look-behinds in regex?
+Have a look at this post: https://stackoverflow.com/a/2973495/9566888
+ -->
+
+<suppressions>
+  <suppress id="LineLengthError" files="Song\.java"/>
+  <suppress id="LineLengthWarning" files=".*(?&lt;!Song)\.java"/>
+</suppressions>
